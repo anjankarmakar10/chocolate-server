@@ -7,7 +7,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const uri =
   "mongodb+srv://chocolate_admin:bCIUI5XtwhRp7xJj@cluster0.d2cwisz.mongodb.net/?retryWrites=true&w=majority";
 
@@ -36,6 +36,15 @@ async function run() {
     app.post("/chocolates", async (req, res) => {
       const chocolate = req.body;
       const result = await chocolateCollaction.insertOne(chocolate);
+      res.send(result);
+    });
+
+    app.delete("/chocolates/:id", async (req, res) => {
+      const id = req.params.id;
+
+      const query = { _id: new ObjectId(id) };
+      const result = await chocolateCollaction.deleteOne(query);
+
       res.send(result);
     });
 
