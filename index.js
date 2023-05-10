@@ -33,6 +33,35 @@ async function run() {
       res.send(result);
     });
 
+    app.put("/chocolates/:id", async (req, res) => {
+      const id = req.params.id;
+      const chocolate = req.body;
+
+      const filter = { _id: new ObjectId(id) };
+      const updatedChocolate = {
+        $set: {
+          name: chocolate.name,
+          country: chocolate.country,
+          cetagory: chocolate.cetagory,
+        },
+      };
+
+      const result = await chocolateCollaction.updateOne(
+        filter,
+        updatedChocolate,
+        { upsert: true }
+      );
+
+      res.send(result);
+    });
+
+    app.get("/chocolates/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await chocolateCollaction.findOne(query);
+      res.send(result);
+    });
+
     app.post("/chocolates", async (req, res) => {
       const chocolate = req.body;
       const result = await chocolateCollaction.insertOne(chocolate);
